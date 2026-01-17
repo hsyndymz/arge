@@ -11,7 +11,7 @@ import { toast } from "sonner";
 
 export default function LoginPage() {
   const [, setLocation] = useLocation();
-  const loginUrl = getLoginUrl();
+  // const loginUrl = getLoginUrl();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -95,12 +95,7 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-3">
-            <a href={loginUrl} className="block">
-              <Button variant="outline" className="w-full">
-                <Chrome className="mr-2 h-4 w-4" />
-                Google ile Giriş Yap
-              </Button>
-            </a>
+
 
             <Button
               onClick={handleGuestAccess}
