@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, email, role, approved FROM users WHERE email = 'huseyin.duymaz@kgm.gov.tr';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 37Z4UHZsKumKtBA.root --database 6AssMzEiaqHdyeofNK5foU --execute SELECT id, email, role, approved FROM users WHERE email = 'huseyin.duymaz@kgm.gov.tr';",
+  "rows": [
+    {
+      "id": "1110207",
+      "email": "huseyin.duymaz@kgm.gov.tr",
+      "role": "admin",
+      "approved": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\trole\tapproved\n1110207\thuseyin.duymaz@kgm.gov.tr\tadmin\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1491
+}
