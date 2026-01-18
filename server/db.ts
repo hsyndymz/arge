@@ -1,5 +1,6 @@
 import { eq, sql, and, like } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
+import { nanoid } from "nanoid";
 import { InsertUser, users, quarries, provinces, Quarry, Province, InsertQuarry } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -132,7 +133,7 @@ export async function getProvinceByName(name: string): Promise<Province | undefi
 export async function createQuarry(data: Omit<InsertQuarry, 'id' | 'createdAt' | 'updatedAt'>): Promise<number> {
   const db = await getDb();
   if (!db) throw new Error('Database not available');
-  
+
   const result = await db.insert(quarries).values({
     name: data.name,
     latitude: data.latitude,
@@ -142,14 +143,14 @@ export async function createQuarry(data: Omit<InsertQuarry, 'id' | 'createdAt' |
     province: data.province || null,
     district: data.district || null,
   });
-  
+
   return Number(result[0].insertId);
 }
 
 export async function createQuarriesBulk(data: Omit<InsertQuarry, 'id' | 'createdAt' | 'updatedAt'>[]): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error('Database not available');
-  
+
   const values = data.map(q => ({
     name: q.name,
     latitude: q.latitude,
@@ -159,7 +160,7 @@ export async function createQuarriesBulk(data: Omit<InsertQuarry, 'id' | 'create
     province: q.province || null,
     district: q.district || null,
   }));
-  
+
   await db.insert(quarries).values(values);
 }
 
@@ -172,7 +173,7 @@ export async function deleteQuarry(id: number): Promise<void> {
 export async function deleteQuarriesBulk(ids: number[]): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error('Database not available');
-  
+
   for (const id of ids) {
     await db.delete(quarries).where(eq(quarries.id, id));
   }
@@ -187,7 +188,7 @@ export function calculateDistance(
   const R = 6371; // Earth's radius in km
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = 
+  const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
     Math.sin(dLon / 2) * Math.sin(dLon / 2);
@@ -219,9 +220,11 @@ export async function createUser(data: { email: string; password: string; approv
   const db = await getDb();
   if (!db) return null;
   const result = await db.insert(users).values({
+    openId: nanoid(),
     email: data.email,
     password: data.password,
     role: "user",
+    loginMethod: "email",
     approved: data.approved ?? false,
   });
   return result;

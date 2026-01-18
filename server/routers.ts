@@ -4,10 +4,10 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router, protectedProcedure } from "./_core/trpc";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
-import { 
-  getAllQuarries, 
-  getQuarryById, 
-  searchQuarries, 
+import {
+  getAllQuarries,
+  getQuarryById,
+  searchQuarries,
   updateQuarry,
   getAllProvinces,
   getProvinceByName,
@@ -74,13 +74,14 @@ export const appRouter = router({
         if (!user.approved) {
           throw new Error("Hesabınız henüz yönetici tarafından onaylanmamış");
         }
-        
+
         if (!user.openId) {
-             throw new Error("Kullanıcı kimliği bulunamadı");
+          throw new Error("Kullanıcı kimliği bulunamadı");
         }
 
         const sessionToken = await sdk.createSessionToken(user.openId, {
           name: user.name || "",
+          email: user.email || undefined,
           expiresInMs: ONE_YEAR_MS,
         });
 
