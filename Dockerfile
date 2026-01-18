@@ -16,36 +16,8 @@ WORKDIR /app
 # Bağımlılık dosyalarını kopyala
 COPY package.json pnpm-lock.yaml ./
 
-# Patch klasörünü manuel oluştur ve dosya içeriğini yaz (Git sync sorununu aşmak için)
-RUN mkdir -p patches && \
-    printf 'diff --git a/esm/index.js b/esm/index.js\n\
-index c83bc63a2c10431fb62e25b7d490656a3796f301..bcae513cc20a4be6c38dc116e0b8d9bacda62b5b 100644\n\
---- a/esm/index.js\n\
-+++ b/esm/index.js\n\
-@@ -338,6 +338,23 @@ const Switch = ({ children, location }) => {\n\
-   const router = useRouter();\n\
-   const [originalLocation] = useLocationFromRouter(router);\n\
- \n\
-+  // Collect all route paths to window object\n\
-+  if (typeof window !== "undefined") {\n\
-+    if (!window.__WOUTER_ROUTES__) {\n\
-+      window.__WOUTER_ROUTES__ = [];\n\
-+    }\n\
-+\n\
-+    const allChildren = flattenChildren(children);\n\
-+    allChildren.forEach((element) => {\n\
-+      if (isValidElement(element) && element.props.path) {\n\
-+        const path = element.props.path;\n\
-+        if (!window.__WOUTER_ROUTES__.includes(path)) {\n\
-+          window.__WOUTER_ROUTES__.push(path);\n\
-+        }\n\
-+      }\n\
-+    });\n\
-+  }\n\
-+\n\
-   for (const element of flattenChildren(children)) {\n\
-     let match = 0;\n\
- \n' > patches/wouter@3.7.1.patch
+# Patch klasörünü kopyala
+COPY patches ./patches
 
 # Bağımlılıkları yükle
 RUN pnpm install
