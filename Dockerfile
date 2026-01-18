@@ -15,15 +15,11 @@ WORKDIR /app
 
 # Bağımlılık dosyalarını kopyala
 # Bağımlılık dosyalarını kopyala
-COPY package.json pnpm-lock.yaml ./
+# Bağımlılık dosyalarını kopyala
+COPY package.json ./
 
-# Patch klasörünü kopyala
-COPY patches ./patches
-# Patch dosyalarini Linux formatina cevir (CRLF -> LF)
-RUN dos2unix patches/*.patch
-
-# Bağımlılıkları yükle
-RUN pnpm install --frozen-lockfile=false
+# Bağımlılıkları yükle (Lockfile olmadan taze kurulum yap)
+RUN pnpm install
 
 # Kaynak kodları kopyala
 COPY . .
