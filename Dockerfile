@@ -5,7 +5,8 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
 # Gerekli sistem paketlerini yükle (patch komutu patchedDependencies için gerekli)
-RUN apt-get update && apt-get install -y openssl patch git python3 make g++ && rm -rf /var/lib/apt/lists/*
+# Gerekli sistem paketlerini yükle (patch komutu ve dos2unix hatasız kurulum için)
+RUN apt-get update && apt-get install -y openssl patch git python3 make g++ dos2unix && rm -rf /var/lib/apt/lists/*
 
 
 # Build aşaması
@@ -18,6 +19,8 @@ COPY package.json pnpm-lock.yaml ./
 
 # Patch klasörünü kopyala
 COPY patches ./patches
+# Patch dosyalarini Linux formatina cevir (CRLF -> LF)
+RUN dos2unix patches/*.patch
 
 # Bağımlılıkları yükle
 RUN pnpm install --frozen-lockfile=false
