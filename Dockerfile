@@ -20,7 +20,7 @@ COPY package.json pnpm-lock.yaml ./
 COPY patches ./patches
 
 # Bağımlılıkları yükle
-RUN pnpm install
+RUN pnpm install --frozen-lockfile=false
 
 # Kaynak kodları kopyala
 COPY . .
